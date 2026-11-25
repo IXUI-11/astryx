@@ -6,10 +6,19 @@ import '@astryxdesign/core/reset.css';
 import '@astryxdesign/theme-neutral/theme.css';
 import './index.css';
 import App from './App';
+import Dashboard from './Dashboard';
+import {Theme} from '@astryxdesign/core/theme';
+import {neutralTheme} from '@astryxdesign/theme-neutral/built';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- root element must exist in index.html
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    {window.location.hash === '#dashboard' ? (
+      <Theme theme={neutralTheme}>
+        <Dashboard />
+      </Theme>
+    ) : (
+      <App />
+    )}
   </StrictMode>,
 );
