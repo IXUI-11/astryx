@@ -12,7 +12,7 @@
     "@stylexjs/stylex": "^0.19.1",
     "@astryxdesign/core": "*",
     "@astryxdesign/theme-neutral": "*",
-    "@astryxdesign/theme-y2k": "*",
+    "@astryxdesign/theme-stone": "*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

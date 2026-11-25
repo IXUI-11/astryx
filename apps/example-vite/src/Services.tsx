@@ -1,203 +1,268 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
 import * as stylex from '@stylexjs/stylex';
-import {colorVars, spacingVars} from '@astryxdesign/core/theme/tokens.stylex';
+import {
+  colorVars,
+  radiusVars,
+  spacingVars,
+} from '@astryxdesign/core/theme/tokens.stylex';
 import {VStack, HStack} from '@astryxdesign/core/Layout';
+import {Grid} from '@astryxdesign/core/Grid';
 import {Card} from '@astryxdesign/core/Card';
 import {Text, Heading} from '@astryxdesign/core/Text';
 import {Badge} from '@astryxdesign/core/Badge';
 import {Button} from '@astryxdesign/core/Button';
+import {Divider} from '@astryxdesign/core/Divider';
 
-type Variant = 'yellow' | 'blue' | 'orange' | 'green';
-
-const SERVICES: {
-  title: string;
-  description: string;
-  stack: string;
-  variant: Variant;
-}[] = [
+const SERVICES = [
   {
     title: 'Site vitrine',
     description:
-      'Un site clair et rapide pour présenter votre activité, adapté au mobile et aux moteurs de recherche.',
+      'Un site clair et rapide pour présenter une activité, pensé pour le mobile et pour les moteurs de recherche.',
+    deliverables: [
+      'Maquette puis intégration responsive',
+      'Formulaire de contact',
+      'Bases du référencement naturel',
+    ],
     stack: 'Angular · React · PHP',
-    variant: 'yellow',
   },
   {
-    title: 'Application sur mesure',
+    title: 'Application web sur mesure',
     description:
-      'Un outil métier ou une plateforme : comptes, rôles, base de données et interface soignée.',
+      'Un outil métier ou une plateforme avec comptes utilisateurs, base de données et interface soignée.',
+    deliverables: [
+      'API REST et base de données MySQL',
+      'Authentification et gestion des rôles',
+      'Interface front-end complète',
+    ],
     stack: 'ASP.NET · React · MySQL',
-    variant: 'blue',
   },
   {
-    title: 'Hébergement',
-    description: 'Serveur privé, nom de domaine, HTTPS et sauvegardes.',
-    stack: 'VPS · Linux · Proxmox',
-    variant: 'orange',
-  },
-  {
-    title: 'Maintenance',
+    title: 'Hébergement et mise en ligne',
     description:
-      "Corrections, mises à jour et nouvelles fonctionnalités d'un site existant.",
+      'Déploiement sur un serveur privé, avec nom de domaine, HTTPS et sauvegardes.',
+    deliverables: [
+      'Configuration du serveur VPS',
+      'Certificat HTTPS et nom de domaine',
+      'Sauvegardes et mises à jour',
+    ],
+    stack: 'VPS · Linux · Proxmox',
+  },
+  {
+    title: 'Maintenance et évolution',
+    description:
+      "Corrections, mises à jour et nouvelles fonctionnalités pour qu'un site existant reste fiable.",
+    deliverables: [
+      'Correction de bugs',
+      'Mise à jour des dépendances',
+      'Nouvelles fonctionnalités',
+    ],
     stack: 'PHP · Angular · MySQL',
-    variant: 'green',
   },
 ];
 
-const STACK = [
-  'Angular',
-  'React',
-  'ASP.NET',
-  'PHP',
-  'MySQL',
-  'VPS',
-  'Proxmox',
-] as const;
-
-const STEPS: {title: string; text: string; variant: Variant}[] = [
-  {title: 'Échange', text: 'Besoin, public, budget.', variant: 'yellow'},
-  {title: 'Maquette', text: 'Structure et design validés.', variant: 'blue'},
-  {title: 'Développement', text: 'Points réguliers.', variant: 'orange'},
-  {title: 'Mise en ligne', text: 'Tests et prise en main.', variant: 'green'},
+const TECHNOLOGIES = [
+  {label: 'Front-end', items: ['Angular', 'React']},
+  {label: 'Back-end', items: ['ASP.NET', 'PHP']},
+  {label: 'Données', items: ['MySQL']},
+  {label: 'Infrastructure', items: ['VPS', 'Proxmox']},
 ];
 
-// A numeric Grid never reflows. These grids use media rules so the staircase
-// and the step strip collapse to one column on a phone.
+const STEPS = [
+  {title: 'Échange', text: 'On définit le besoin, le public et le budget.'},
+  {title: 'Maquette', text: 'Vous validez la structure et le design.'},
+  {
+    title: 'Développement',
+    text: 'Je construis le site, avec des points réguliers.',
+  },
+  {title: 'Mise en ligne', text: 'Déploiement, tests et prise en main.'},
+];
+
 const styles = stylex.create({
   page: {
     minHeight: '100vh',
     backgroundColor: colorVars['--color-background-body'],
     color: colorVars['--color-text-primary'],
-    padding: 'clamp(24px, 5vw, 72px)',
   },
   inner: {
     maxWidth: 1120,
     marginInline: 'auto',
+    paddingInline: 'clamp(20px, 4vw, 48px)',
   },
-  stairs: {
-    display: 'grid',
-    rowGap: spacingVars['--spacing-4'],
-    columnGap: spacingVars['--spacing-4'],
-    gridTemplateColumns: {
-      default: 'minmax(0, 1fr)',
-      '@media (min-width: 900px)': 'repeat(12, minmax(0, 1fr))',
-    },
+  header: {
+    paddingBlock: spacingVars['--spacing-4'],
   },
-  stair: (column: number) => ({
-    gridColumn: {
-      default: 'auto',
-      '@media (min-width: 900px)': `${column} / span 6`,
-    },
-  }),
-  steps: {
+  section: {
+    paddingBlock: 'clamp(40px, 7vw, 80px)',
+  },
+  list: {
+    margin: 0,
+    paddingInlineStart: spacingVars['--spacing-4'],
+    listStyleType: 'disc',
+  },
+  techRow: {
     display: 'grid',
+    alignItems: 'center',
     gap: spacingVars['--spacing-3'],
-    gridTemplateColumns: {
-      default: 'minmax(0, 1fr)',
-      '@media (min-width: 640px)': 'repeat(2, minmax(0, 1fr))',
-      '@media (min-width: 960px)': 'repeat(4, minmax(0, 1fr))',
-    },
+    gridTemplateColumns: '120px minmax(0, 1fr)',
+  },
+  stepNumber: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    flexShrink: 0,
+    borderRadius: radiusVars['--radius-full'],
+    backgroundColor: colorVars['--color-accent'],
+    color: colorVars['--color-on-accent'],
   },
 });
 
 export default function Services() {
   return (
     <div {...stylex.props(styles.page)}>
+      <header {...stylex.props(styles.inner, styles.header)}>
+        <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
+          <Text weight="semibold">Développeur web full-stack</Text>
+          <HStack gap={1} vAlign="center" wrap="wrap">
+            <Button label="Services" variant="ghost" href="#services" />
+            <Button label="Méthode" variant="ghost" href="#methode" />
+            <Button label="Contact" variant="primary" href="#contact" />
+          </HStack>
+        </HStack>
+      </header>
+      <Divider />
+
       <main {...stylex.props(styles.inner)}>
-        <VStack gap={10}>
-          <VStack gap={5}>
-            <Heading level={1} type="display-1">
-              Votre site, de A à Z.
-            </Heading>
-            <Text type="large">
-              Je conçois, développe et héberge des sites web clairs, rapides et
-              faciles à gérer.
-            </Text>
-            <HStack gap={3} wrap="wrap">
-              <Button
-                label="Demander un devis"
-                variant="primary"
-                size="lg"
-                href="#contact"
-              />
-              <Button
-                label="Voir les services"
-                variant="secondary"
-                size="lg"
-                href="#services"
-              />
-            </HStack>
-            <HStack gap={2} wrap="wrap">
-              {STACK.map((tech, i) => (
-                <Badge
-                  key={tech}
-                  label={tech}
-                  variant={
-                    (['yellow', 'blue', 'orange', 'green'] as const)[i % 4]
-                  }
-                />
-              ))}
-            </HStack>
-          </VStack>
-
-          <VStack gap={4} id="services">
-            <Heading level={2}>Mes services</Heading>
-            <div {...stylex.props(styles.stairs)}>
-              {SERVICES.map((service, i) => (
-                <div
-                  key={service.title}
-                  {...stylex.props(styles.stair(i * 2 + 1))}>
-                  <Card variant={service.variant} padding={6} height="100%">
-                    <VStack gap={3}>
-                      <Heading level={3} type="display-3">
-                        {service.title}
-                      </Heading>
-                      <Text>{service.description}</Text>
-                      <Text weight="bold" size="sm">
-                        {service.stack}
-                      </Text>
-                    </VStack>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </VStack>
-
-          <VStack gap={4}>
-            <Heading level={2}>Comment ça se passe</Heading>
-            <div {...stylex.props(styles.steps)}>
-              {STEPS.map(step => (
-                <Card key={step.title} variant={step.variant} padding={4}>
-                  <VStack gap={1}>
-                    <Heading level={3}>{step.title}</Heading>
-                    <Text size="sm">{step.text}</Text>
-                  </VStack>
-                </Card>
-              ))}
-            </div>
-          </VStack>
-
-          <Card variant="pink" padding={8}>
-            <VStack gap={4} id="contact">
-              <Heading level={2} type="display-3">
-                Un projet en tête ?
-              </Heading>
-              <Text type="large">
-                Décrivez votre besoin en quelques lignes, je vous réponds avec
-                une proposition.
-              </Text>
+        <section {...stylex.props(styles.section)}>
+          <Grid
+            gap={10}
+            align="center"
+            columns={{minWidth: 340, max: 2, repeat: 'fit'}}>
+            <VStack gap={5}>
               <HStack>
+                <Badge label="Sites et applications web" />
+              </HStack>
+              <Heading level={1} type="display-2">
+                De la conception à l'hébergement, un seul interlocuteur.
+              </Heading>
+              <Text type="large" color="secondary">
+                Je conçois, développe et héberge des sites web et des
+                applications sur mesure, pour des entreprises et des
+                indépendants.
+              </Text>
+              <HStack gap={3} wrap="wrap">
                 <Button
-                  label="Me contacter"
+                  label="Demander un devis"
                   variant="primary"
                   size="lg"
-                  href="mailto:contact@example.com"
+                  href="#contact"
+                />
+                <Button
+                  label="Voir les services"
+                  variant="secondary"
+                  size="lg"
+                  href="#services"
                 />
               </HStack>
             </VStack>
+            <Card variant="muted" padding={6}>
+              <VStack gap={4}>
+                <Heading level={2}>Technologies</Heading>
+                <VStack gap={3}>
+                  {TECHNOLOGIES.map(group => (
+                    <div key={group.label} {...stylex.props(styles.techRow)}>
+                      <Text type="supporting" color="secondary">
+                        {group.label}
+                      </Text>
+                      <HStack gap={2} wrap="wrap">
+                        {group.items.map(item => (
+                          <Badge key={item} label={item} />
+                        ))}
+                      </HStack>
+                    </div>
+                  ))}
+                </VStack>
+              </VStack>
+            </Card>
+          </Grid>
+        </section>
+
+        <Divider />
+
+        <section id="services" {...stylex.props(styles.section)}>
+          <VStack gap={6}>
+            <VStack gap={2}>
+              <Heading level={2}>Services</Heading>
+              <Text color="secondary">
+                Chaque projet couvre la conception, le développement et la mise
+                en ligne.
+              </Text>
+            </VStack>
+            <Grid gap={4} columns={{minWidth: 440, max: 2, repeat: 'fit'}}>
+              {SERVICES.map(service => (
+                <Card key={service.title} padding={6} height="100%">
+                  <VStack gap={3}>
+                    <Heading level={3}>{service.title}</Heading>
+                    <Text color="secondary">{service.description}</Text>
+                    <ul {...stylex.props(styles.list)}>
+                      {service.deliverables.map(item => (
+                        <li key={item}>
+                          <Text>{item}</Text>
+                        </li>
+                      ))}
+                    </ul>
+                    <Text type="supporting" weight="semibold">
+                      {service.stack}
+                    </Text>
+                  </VStack>
+                </Card>
+              ))}
+            </Grid>
+          </VStack>
+        </section>
+
+        <Divider />
+
+        <section id="methode" {...stylex.props(styles.section)}>
+          <VStack gap={6}>
+            <Heading level={2}>Méthode de travail</Heading>
+            <Grid gap={6} columns={{minWidth: 220, max: 4, repeat: 'fit'}}>
+              {STEPS.map((step, i) => (
+                <VStack key={step.title} gap={2}>
+                  <span {...stylex.props(styles.stepNumber)}>
+                    <Text weight="semibold" color="inherit">
+                      {i + 1}
+                    </Text>
+                  </span>
+                  <Heading level={3}>{step.title}</Heading>
+                  <Text color="secondary">{step.text}</Text>
+                </VStack>
+              ))}
+            </Grid>
+          </VStack>
+        </section>
+
+        <section id="contact" {...stylex.props(styles.section)}>
+          <Card variant="muted" padding={8}>
+            <HStack gap={6} vAlign="center" hAlign="between" wrap="wrap">
+              <VStack gap={2}>
+                <Heading level={2}>Parlons de votre projet</Heading>
+                <Text color="secondary">
+                  Décrivez votre besoin en quelques lignes, je vous réponds avec
+                  une proposition.
+                </Text>
+              </VStack>
+              <Button
+                label="Me contacter"
+                variant="primary"
+                size="lg"
+                href="mailto:contact@example.com"
+              />
+            </HStack>
           </Card>
-        </VStack>
+        </section>
       </main>
     </div>
   );
